@@ -14,4 +14,8 @@ public partial class Usuario
     public string Contraseña { get; set; } = null!;
 
     public string? Rol { get; set; }
+
+    public virtual ICollection<Favorito> Favoritos { get; set; } = new List<Favorito>();
+
+    public virtual Voto? Voto { get; set; }
 }

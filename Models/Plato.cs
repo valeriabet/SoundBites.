@@ -1,0 +1,21 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace SoundBitesAPI.Models;
+
+public partial class Plato
+{
+    public int IdPlato { get; set; }
+
+    public string Nombre { get; set; } = null!;
+
+    public string? Descripcion { get; set; }
+
+    public decimal Precio { get; set; }
+
+    public int IdCategoria { get; set; }
+
+    public virtual ICollection<Favorito> Favoritos { get; set; } = new List<Favorito>();
+
+    public virtual Categoria IdCategoriaNavigation { get; set; } = null!;
+}

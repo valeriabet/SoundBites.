@@ -12,9 +12,9 @@ namespace SoundBitesAPI.Controllers
     [ApiController]
     public class UsuarioController : ControllerBase
     {
-        private readonly DbSoundBitesContext _context;
+        private readonly AppDbContext _context;
 
-        public UsuarioController(DbSoundBitesContext context)
+        public UsuarioController(AppDbContext context)
         {
             _context = context;
         }
