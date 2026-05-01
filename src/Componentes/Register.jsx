@@ -11,7 +11,7 @@ function Register() {
     const nuevoUsuario = { nombre, correo, contraseña, rol };
 
     const response = await fetch(
-      "https://localhost:XXXX/api/usuario/guardar usuario",
+      "https://localhost:7117/api/usuario/guardar usuario",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
