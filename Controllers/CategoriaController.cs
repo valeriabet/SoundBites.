@@ -1,7 +1,10 @@
-﻿    using Microsoft.AspNetCore.Http;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using SoundBitesAPI.Models;
+using SoundBitesAPI.Repositories;
+
 
 namespace SoundBitesAPI.Controllers
 {
@@ -9,67 +12,57 @@ namespace SoundBitesAPI.Controllers
     [ApiController]
     public class CategoriaController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly CategoriaRepository _repo;
 
-        public CategoriaController(AppDbContext context)
+        public CategoriaController(CategoriaRepository repo)
         {
-            _context = context;
+            _repo = repo;
         }
 
         [HttpGet("listar categorias")]
-        public async Task<ActionResult<IEnumerable<Categoria>>> ListarCategorias()
+        public async Task<ActionResult<IEnumerable<Categoria>>> ListarCategoria()
         {
-            var categorias = await _context.Categorias.ToListAsync();
-            return Ok(categorias); //200
+            var categorias = await _repo.ListarCategorias();
+            return Ok(categorias);
         }
 
         [HttpPost("guardar categoria")]
         public async Task<ActionResult<Categoria>> GuardarCategoria(Categoria categoria)
         {
-            _context.Categorias.Add(categoria);
-            await _context.SaveChangesAsync();
+            await _repo.GuardarCategoria(categoria);
             return StatusCode(StatusCodes.Status201Created, categoria);
         }
+
         [HttpPut("actualizar categoria/{id}")]
         public async Task<ActionResult> ActualizarCategoria(int id, Categoria categoria)
         {
-            var categoriaActualizada = await _context.Categorias.FindAsync(id);
+            categoria.IdCategoria = id;
+            var filas = await _repo.ActualizarCategoria(categoria);
 
-            if (categoriaActualizada == null)
-            {
-                return NotFound(); //404
-            }
-            categoriaActualizada.Nombre = categoria.Nombre;
-            
-            await _context.SaveChangesAsync();
+            if (filas == 0)
+                return NotFound();
 
-            return Ok(categoriaActualizada);
-
+            return Ok(categoria);
         }
 
-        [HttpDelete("eliminar/{id}")]
+        [HttpDelete("eliminar categoria/{id}")]
         public async Task<ActionResult> EliminarCategoria(int id)
         {
-            var categoria = await _context.Categorias.FindAsync(id);
+            var filas = await _repo.EliminarCategoria(id);
 
-            if (categoria == null)
-            {
+            if (filas == 0)
                 return NotFound();
-            }
 
-            _context.Categorias.Remove(categoria);
-            await _context.SaveChangesAsync();
             return NoContent();
         }
 
-        [HttpGet("buscar/{id}")]
+        [HttpGet("buscar por id/{id}")]
         public async Task<ActionResult<Categoria>> BuscarPorId(int id)
         {
-            var categoria = await _context.Categorias.FindAsync(id);
+            var categoria = await _repo.BuscarPorId(id);
             if (categoria == null)
-            {
                 return NotFound();
-            }
+
             return Ok(categoria);
         }
     }

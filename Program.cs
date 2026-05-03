@@ -1,7 +1,13 @@
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SoundBitesAPI.Models;
+using SoundBitesAPI.Repositories;
+using System.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("connectionDB"))
      );
@@ -23,13 +29,19 @@ builder.Services.AddCors(options =>
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 //builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
-var app = builder.Build();
 
 /*
  * app.MapGet("/" , (HttpContext context) => {
     context.Response.Redirect("swagger/index,html", permanent: false);
     });
 */
+
+builder.Services.AddTransient<IDbConnection>(sp =>
+    new SqlConnection(builder.Configuration.GetConnectionString("connectionDB")));
+builder.Services.AddScoped<UsuarioRepository>();
+builder.Services.AddScoped<CategoriaRepository>();
+
+var app = builder.Build();
 
 app.Use(async (context, next) =>
 {

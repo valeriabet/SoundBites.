@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using SoundBitesAPI.Models;
+using SoundBitesAPI.Repositories;
 
 namespace SoundBitesAPI.Controllers
 {
@@ -12,72 +11,59 @@ namespace SoundBitesAPI.Controllers
     [ApiController]
     public class UsuarioController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly UsuarioRepository _repo;
 
-        public UsuarioController(AppDbContext context)
+        public UsuarioController(UsuarioRepository repo)
         {
-            _context = context;
+            _repo = repo;
         }
 
         [HttpGet("listar usuarios")]
         public async Task<ActionResult<IEnumerable<Usuario>>> ListarUsuario()
         {
-            var usuarios = await _context.Usuarios.ToListAsync();
-            return Ok(usuarios); //200
+            var usuarios = await _repo.ListarUsuarios();
+            return Ok(usuarios);
         }
 
         [HttpPost("guardar usuario")]
         public async Task<ActionResult<Usuario>> GuardarUsuario(Usuario usuario)
         {
-            _context.Usuarios.Add(usuario);
-            await _context.SaveChangesAsync();
+            await _repo.GuardarUsuario(usuario);
             return StatusCode(StatusCodes.Status201Created, usuario);
         }
 
         [HttpPut("actualizar usuario/{id}")]
         public async Task<ActionResult> ActualizarUsuario(int id, Usuario usuario)
         {
-            var usuarioActualizado = await _context.Usuarios.FindAsync(id);
+            usuario.IdUsuario = id;
+            var filas = await _repo.ActualizarUsuario(usuario);
 
-            if (usuarioActualizado == null)
-            {
-                return NotFound(); //404
-            }
-            usuarioActualizado.Nombre = usuario.Nombre;
-            usuarioActualizado.Correo = usuario.Correo;
-            usuarioActualizado.Contraseña = usuario.Contraseña;
-            usuarioActualizado.Rol = usuario.Rol;
+            if (filas == 0)
+                return NotFound();
 
-            await _context.SaveChangesAsync();
-
-            return Ok(usuarioActualizado);
-
+            return Ok(usuario);
         }
 
         [HttpDelete("eliminar/{id}")]
         public async Task<ActionResult> EliminarUsuario(int id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);
+            var filas = await _repo.EliminarUsuario(id);
 
-            if (usuario == null)
-            {
+            if (filas == 0)
                 return NotFound();
-            }
 
-            _context.Usuarios.Remove(usuario);
-            await _context.SaveChangesAsync();
             return NoContent();
         }
 
         [HttpGet("buscar/{id}")]
         public async Task<ActionResult<Usuario>> BuscarPorId(int id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);
+            var usuario = await _repo.BuscarPorId(id);
             if (usuario == null)
-            {
                 return NotFound();
-            }
+
             return Ok(usuario);
         }
     }
 }
+
