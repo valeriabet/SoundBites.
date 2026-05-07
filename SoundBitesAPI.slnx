@@ -1,5 +1,5 @@
 <Solution>
-  <Project Path="../Model/Model.csproj" Id="2067136a-e7d2-497d-841e-ffc478338dfd" />
+  <Project Path="../Models/Models.csproj" />
   <Project Path="../Query/Query.csproj" Id="ed400d4a-b7a5-4468-9d37-d217355bb446" />
   <Project Path="../Repository/Repository.csproj" Id="df1b5156-1423-4ff1-aaa2-e98315e48a12" />
   <Project Path="SoundBitesAPI.csproj" />

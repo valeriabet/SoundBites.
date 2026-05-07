@@ -9,50 +9,47 @@ namespace SoundBitesAPI.Controllers
     [ApiController]
     public class FavoritoController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly FavoritoRepository _repository;
 
-        public FavoritoController(AppDbContext context)
+        public FavoritoController(FavoritoRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         [HttpGet("listar favoritos")]
         public async Task<ActionResult<IEnumerable<Favorito>>> ListarFavoritos()
         {
-            var favoritos = await _context.Favoritos.ToListAsync();
-            return Ok(favoritos); //200
-        }
+            var favoritos = await _repository.GetAll();
 
-        [HttpPost("Guardar favorito")]
-        public async Task<ActionResult<Genero>> GuardarFavorito(Favorito favorito)
-        {
-            _context.Favoritos.Add(favorito);
-            await _context.SaveChangesAsync();
-            return StatusCode(StatusCodes.Status201Created, favorito);
-        }
-        [HttpDelete("eliminar/{id}")]
-        public async Task<ActionResult> EliminarFavorito(int id)
-        {
-            var favorito = await _context.Favoritos.FindAsync(id);
-
-            if (favorito == null)
-            {
-                return NotFound();
-            }
-
-            _context.Favoritos.Remove(favorito);
-            await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok(favoritos);
         }
         [HttpGet("buscar/{id}")]
         public async Task<ActionResult<Favorito>> BuscarPorId(int id)
         {
-            var favorito = await _context.Favoritos.FindAsync(id);
+            var favorito = await _repository.GetById(id);
             if (favorito == null)
             {
                 return NotFound();
             }
             return Ok(favorito);
         }
+        [HttpPost("guardar favorito")]
+        public async Task<ActionResult<Favorito>> GuardarFavorito(Favorito favorito)
+        {
+            var nuevoFavorito = await _repository.Add(favorito);
+            return StatusCode(StatusCodes.Status201Created, nuevoFavorito);
+        }
+        [HttpDelete("eliminar favorito/{id}")]
+        public async Task<ActionResult> EliminarFavorito(int id)
+        {
+            var eliminado = await _repository.Delete(id);
+            if (!eliminado)
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
+
+
     }
 }

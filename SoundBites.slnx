@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Models/Models.csproj" />
+  <Project Path="Query/Query.csproj" />
+  <Project Path="Repository/Repository.csproj" />
+</Solution>

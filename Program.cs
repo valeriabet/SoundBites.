@@ -40,6 +40,8 @@ builder.Services.AddTransient<IDbConnection>(sp =>
     new SqlConnection(builder.Configuration.GetConnectionString("connectionDB")));
 builder.Services.AddScoped<UsuarioRepository>();
 builder.Services.AddScoped<CategoriaRepository>();
+builder.Services.AddScoped<GeneroRepository>();
+builder.Services.AddScoped<FavoritoRepository>();
 
 var app = builder.Build();
 
