@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
  
 const sedes = [
   {
@@ -39,6 +40,7 @@ const sedes = [
 const VISIBLE = 3;
  
 export default function CarruselReserva() {
+  const navigate = useNavigate();
   const [startIndex, setStartIndex] = useState(0);
   const [animating, setAnimating] = useState(false);
   const [direction, setDirection] = useState(null);
@@ -160,9 +162,13 @@ export default function CarruselReserva() {
  
                 {/* CTA button */}
                 <button
+                  type="button"
+                  onClick={() =>
+                    navigate("/reserva", { state: { sede: sede.name } })
+                  }
                   className="mt-4 py-2.5 text-sm font-semibold tracking-wide transition-all duration-200 text-white bg-red-900 hover:bg-red-950"
                 >
-                  Ver sede
+                  Hacer Reserva
                 </button>
               </div>
             ))}
