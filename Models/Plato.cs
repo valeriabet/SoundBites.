@@ -14,4 +14,6 @@ public partial class Plato
     public decimal Precio { get; set; }
 
     public int IdCategoria { get; set; }
+
+    public string? Imagen { get; set; }
 }

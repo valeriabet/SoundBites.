@@ -43,6 +43,7 @@ namespace SoundBitesAPI.Controllers
             platoActualizado.Descripcion = plato.Descripcion;
             platoActualizado.Precio = plato.Precio;
             platoActualizado.IdCategoria = plato.IdCategoria;
+            platoActualizado.Imagen = plato.Imagen;
 
             await _context.SaveChangesAsync();
 

@@ -71,6 +71,9 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Precio)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("precio");
+            entity.Property(e => e.Imagen)
+    .HasMaxLength(300)
+    .HasColumnName("imagen");
         });
 
         modelBuilder.Entity<Usuario>(entity =>

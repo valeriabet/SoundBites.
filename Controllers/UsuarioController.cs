@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Net.WebSockets;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SoundBitesAPI.Models;
+using System.Collections.Generic;
+using System.Net.WebSockets;
+using System.Threading.Tasks;
 
 namespace SoundBitesAPI.Controllers
 {
@@ -79,5 +80,24 @@ namespace SoundBitesAPI.Controllers
             }
             return Ok(usuario);
         }
+        [HttpPost("login")]
+        public async Task<ActionResult> Login([FromBody] LoginRequest request)
+        {
+            var usuario = await _context.Usuarios
+                .FirstOrDefaultAsync(u => u.Correo == request.Correo && u.Contraseña == request.Contraseña);
+
+            if (usuario == null)
+            {
+                return Unauthorized(); // 401
+            }
+
+            return Ok(usuario);
+        }
     }
+    public class LoginRequest
+    {
+        public string Correo { get; set; }
+        public string Contraseña { get; set; }
+    }
+
 }
