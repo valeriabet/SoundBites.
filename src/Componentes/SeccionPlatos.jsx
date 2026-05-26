@@ -66,19 +66,6 @@ const TarjetaPlato = ({ plato, visible }) => {
         <p className="text-[0.82rem] text-gray-400 leading-relaxed flex-1">
           {plato.descripcion}
         </p>
-        <button
-          className={[
-            "mt-3 w-full py-2.5 rounded-xl text-white text-[0.78rem] font-bold tracking-wide transition-all duration-200",
-            hover ? "bg-orange-500 scale-[1.02]" : "bg-orange-400",
-          ].join(" ")}
-          style={{
-            fontFamily: "'Nunito', sans-serif",
-            border: "none",
-            cursor: "pointer",
-          }}
-        >
-          Agregar al pedido
-        </button>
       </div>
     </article>
   );

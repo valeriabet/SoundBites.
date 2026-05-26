@@ -3,8 +3,6 @@ import { MdMusicNote } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 
-
-
 function Register() {
   const [nombre, setNombre] = useState("");
   const [correo, setCorreo] = useState("");
@@ -15,22 +13,22 @@ function Register() {
 
   const handleRegister = async () => {
     const nuevoUsuario = { nombre, correo, contraseña, rol };
-//conexion con base de datos (por hacer)
-    // const response = await fetch(
-    //   "https://localhost:7117/api/usuario/guardar usuario",
-    //   {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify(nuevoUsuario),
-    //   },
-    // );
 
-  //   if (response.ok) {
-  //     alert("Usuario registrado correctamente");
-  //   } else {
-  //     alert("Error al registrar");
-  //   }
-  // };
+    const response = await fetch(
+      "https://localhost:7117/api/usuario/guardar usuario",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(nuevoUsuario),
+      },
+    );
+
+    if (response.ok) {
+      alert("Usuario registrado correctamente");
+      navigate("/login");
+    } else {
+      alert("Error al registrar");
+    }
   };
 
   return (
@@ -75,7 +73,7 @@ function Register() {
 
         {/* Contraseña */}
         <div className="mb-4">
-        <label className="text-sm font-medium text-gray-700 block mb-1">
+          <label className="text-sm font-medium text-gray-700 block mb-1">
             Contraseña
           </label>
           <div className="flex items-center border rounded-xl px-3 py-2 bg-gray-50">
@@ -109,7 +107,7 @@ function Register() {
             value={rol}
             onChange={(e) => setRol(e.target.value)}
           >
-            <option value="cliente">Cliente</option>
+            <option value="usuario">Cliente</option>
             <option value="admin">Admin</option>
           </select>
         </div>
@@ -132,10 +130,9 @@ function Register() {
             Inicia Sesión
           </span>
         </p>
-
       </div>
     </div>
   );
 }
 
-export default Register; 
+export default Register;

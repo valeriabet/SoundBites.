@@ -2,14 +2,33 @@ import { useState } from "react";
 import { MdMusicNote } from "react-icons/md";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [correo, setCorreo] = useState("");
   const [contraseña, setContraseña] = useState("");
   const [verContraseña, setVerContraseña] = useState(false);
 
+  const navigate = useNavigate();
+
   const handleLogin = async () => {
-    //conexion con la API
+    const response = await fetch("https://localhost:7117/api/usuario/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ correo, contraseña }),
+    });
+
+    if (response.ok) {
+      const usuario = await response.json();
+      localStorage.setItem("usuario", JSON.stringify(usuario));
+      if (usuario.rol === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
+    } else {
+      alert("Correo o contraseña incorrectos");
+    }
   };
 
   return (
@@ -113,8 +132,7 @@ function Login() {
 
         {/*Continuar como invitado*/}
         <p className="text-center text-xs text-orange-500 p-2">
-          <Link to="/">          Continua como invitado
-          </Link>
+          <Link to="/"> Continua como invitado</Link>
         </p>
 
         {/* Terminos */}
