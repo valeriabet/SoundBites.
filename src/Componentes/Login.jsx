@@ -75,6 +75,7 @@ function Login() {
               onChange={(e) => setContraseña(e.target.value)}
             />
             <button
+              type="button"
               onClick={() => setVerContraseña(!verContraseña)}
               className="text-gray-400"
             >

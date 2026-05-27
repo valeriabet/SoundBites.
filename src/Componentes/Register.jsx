@@ -2,34 +2,34 @@ import { useState } from "react";
 import { MdMusicNote } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
+import { registrarUsuario } from "../services/authService";
 
 function Register() {
   const [nombre, setNombre] = useState("");
   const [correo, setCorreo] = useState("");
   const [contraseña, setContraseña] = useState("");
   const [verContraseña, setVerContraseña] = useState(false);
-  const [rol, setRol] = useState("Cliente");
+  const [rol, setRol] = useState("usuario");
   const navigate = useNavigate();
 
   const handleRegister = async () => {
-    const nuevoUsuario = { nombre, correo, contraseña, rol };
+  try {
+    const nuevoUsuario = {
+      nombre,
+      correo,
+      contraseña,
+      rol,
+    };
 
-    const response = await fetch(
-      "https://localhost:7117/api/usuario/guardar usuario",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(nuevoUsuario),
-      },
-    );
+    await registrarUsuario(nuevoUsuario);
 
-    if (response.ok) {
-      alert("Usuario registrado correctamente");
-      navigate("/login");
-    } else {
-      alert("Error al registrar");
-    }
-  };
+    alert("Usuario registrado correctamente");
+
+    navigate("/login");
+  } catch (error) {
+    alert("Error al registrar usuario");
+  }
+};
 
   return (
     <div className="min-h-screen bg-orange-200 flex items-center justify-center">
@@ -85,8 +85,9 @@ function Register() {
               onChange={(e) => setContraseña(e.target.value)}
             />
             <button
-              onClick={() => setVerContraseña(!verContraseña)}
-              className="text-gray-400"
+               type="button"
+               onClick={() => setVerContraseña(!verContraseña)}
+               className="text-gray-400"
             >
               {verContraseña ? (
                 <MdVisibilityOff size={18} />
