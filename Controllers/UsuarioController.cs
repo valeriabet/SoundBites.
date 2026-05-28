@@ -20,14 +20,14 @@ namespace SoundBitesAPI.Controllers
             _context = context;
         }
 
-        [HttpGet("listar usuarios")]
+        [HttpGet("listarusuarios")]
         public async Task<ActionResult<IEnumerable<Usuario>>> ListarUsuario()
         {
             var usuarios = await _context.Usuarios.ToListAsync();
             return Ok(usuarios); //200
         }
 
-        [HttpPost("guardar usuario")]
+        [HttpPost("guardarusuario")]
         public async Task<ActionResult<Usuario>> GuardarUsuario(Usuario usuario)
         {
             _context.Usuarios.Add(usuario);
@@ -35,7 +35,7 @@ namespace SoundBitesAPI.Controllers
             return StatusCode(StatusCodes.Status201Created, usuario);
         }
 
-        [HttpPut("actualizar usuario/{id}")]
+        [HttpPut("actualizarusuario/{id}")]
         public async Task<ActionResult> ActualizarUsuario(int id, Usuario usuario)
         {
             var usuarioActualizado = await _context.Usuarios.FindAsync(id);
@@ -46,7 +46,7 @@ namespace SoundBitesAPI.Controllers
             }
             usuarioActualizado.Nombre = usuario.Nombre;
             usuarioActualizado.Correo = usuario.Correo;
-            usuarioActualizado.Contraseña = usuario.Contraseña;
+            usuarioActualizado.Contrasena = usuario.Contrasena;
             usuarioActualizado.Rol = usuario.Rol;
 
             await _context.SaveChangesAsync();
@@ -84,7 +84,7 @@ namespace SoundBitesAPI.Controllers
         public async Task<ActionResult> Login([FromBody] LoginRequest request)
         {
             var usuario = await _context.Usuarios
-                .FirstOrDefaultAsync(u => u.Correo == request.Correo && u.Contraseña == request.Contraseña);
+                .FirstOrDefaultAsync(u => u.Correo == request.Correo && u.Contrasena == request.Contrasena);
 
             if (usuario == null)
             {
@@ -96,8 +96,8 @@ namespace SoundBitesAPI.Controllers
     }
     public class LoginRequest
     {
-        public string Correo { get; set; }
-        public string Contraseña { get; set; }
+        public required string Correo { get; set; }
+        public required string Contrasena { get; set; }
     }
 
 }

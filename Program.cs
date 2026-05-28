@@ -31,15 +31,6 @@ var app = builder.Build();
     });
 */
 
-app.Use(async (context, next) =>
-{
-    if (context.Request.Path == "/")
-    {
-        context.Response.Redirect("/swagger/index.html", permanent: false);
-        return;
-    }
-    await next();
-});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

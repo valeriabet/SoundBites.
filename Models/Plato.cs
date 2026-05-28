@@ -15,5 +15,5 @@ public partial class Plato
 
     public int IdCategoria { get; set; }
 
-    public string? Imagen { get; set; }
+    public byte[]? Imagen { get; set; }
 }

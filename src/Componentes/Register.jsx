@@ -2,34 +2,36 @@ import { useState } from "react";
 import { MdMusicNote } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
-import { registrarUsuario } from "../services/authService";
+import { registrarUsuario } from "../Services/authService";
 
 function Register() {
   const [nombre, setNombre] = useState("");
   const [correo, setCorreo] = useState("");
-  const [contraseña, setContraseña] = useState("");
-  const [verContraseña, setVerContraseña] = useState(false);
+  const [contrasena, setContrasena] = useState("");
+  const [verContrasena, setVerContrasena] = useState(false);
   const [rol, setRol] = useState("usuario");
   const navigate = useNavigate();
 
   const handleRegister = async () => {
-  try {
-    const nuevoUsuario = {
-      nombre,
-      correo,
-      contraseña,
-      rol,
-    };
+    try {
+      const nuevoUsuario = {
+        nombre,
+        correo,
+        contrasena,
+        rol,
+      };
 
-    await registrarUsuario(nuevoUsuario);
+      await registrarUsuario(nuevoUsuario);
 
-    alert("Usuario registrado correctamente");
+      alert("Usuario registrado correctamente");
 
-    navigate("/login");
-  } catch (error) {
-    alert("Error al registrar usuario");
-  }
-};
+      navigate("/login");
+    } catch (error) {
+      // Usar 'error' para evitar la regla no-unused-vars y para facilitar depuración.
+      console.error(error);
+      alert("Error al registrar usuario");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-orange-200 flex items-center justify-center">
@@ -74,22 +76,22 @@ function Register() {
         {/* Contraseña */}
         <div className="mb-4">
           <label className="text-sm font-medium text-gray-700 block mb-1">
-            Contraseña
+            Contrasena
           </label>
           <div className="flex items-center border rounded-xl px-3 py-2 bg-gray-50">
             <input
-              type={verContraseña ? "text" : "password"}
+              type={verContrasena ? "text" : "password"}
               placeholder="········"
               className="bg-transparent outline-none w-full text-sm"
-              value={contraseña}
-              onChange={(e) => setContraseña(e.target.value)}
+              value={contrasena}
+              onChange={(e) => setContrasena(e.target.value)}
             />
             <button
                type="button"
-               onClick={() => setVerContraseña(!verContraseña)}
+               onClick={() => setVerContrasena(!verContrasena)}
                className="text-gray-400"
             >
-              {verContraseña ? (
+              {verContrasena ? (
                 <MdVisibilityOff size={18} />
               ) : (
                 <MdVisibility size={18} />

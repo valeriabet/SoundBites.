@@ -2,7 +2,7 @@ const API_URL = "https://localhost:7117/api";
 
 export const registrarUsuario = async (nuevoUsuario) => {
     try {
-        const response = await fetch(`${API_URL}/usuario/guardar usuario`, {
+        const response = await fetch(`${API_URL}/usuario/guardarusuario`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

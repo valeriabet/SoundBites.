@@ -72,8 +72,7 @@ public partial class AppDbContext : DbContext
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("precio");
             entity.Property(e => e.Imagen)
-    .HasMaxLength(300)
-    .HasColumnName("imagen");
+                .HasColumnName("Imagen");
         });
 
         modelBuilder.Entity<Usuario>(entity =>
@@ -81,7 +80,7 @@ public partial class AppDbContext : DbContext
             entity.HasKey(e => e.IdUsuario).HasName("pk_id_usuario");
             entity.ToTable("Usuario");
             entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
-            entity.Property(e => e.Contraseña)
+            entity.Property(e => e.Contrasena)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("contraseña");
