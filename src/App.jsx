@@ -9,6 +9,9 @@ import MainLayout from "./Componentes/Layout/MainLayout";
 
 import AdminPlato from "./Pages/Admin/AdminPlato";
 import CrearPlato from "./Pages/Admin/CrearPlato";
+import EditarPlato from "./Pages/Admin/EditarPlato";
+import Profile from "./Pages/Profile";
+
 
 function App() {
     return (
@@ -43,6 +46,14 @@ function App() {
                     <Route
                         path="admin/crearplato"
                         element={<CrearPlato />}
+                    />
+                    <Route
+                        path="admin/editarplato/:id"
+                        element={<EditarPlato />}
+                    />
+                    <Route
+                        path="perfil"
+                        element={<Profile />}
                     />
                 </Route>
             </Routes>

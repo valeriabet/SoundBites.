@@ -9,7 +9,4 @@ public partial class Categoria
     public int IdCategoria { get; set; }
 
     public string Nombre { get; set; } = null!;
-
-    [JsonIgnore]
-    public ICollection<Plato> Platos { get; set; } = new List<Plato>();
 }

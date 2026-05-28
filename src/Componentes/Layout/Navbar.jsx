@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { MdMusicNote } from "react-icons/md";
+import { logout } from "../../Services/authService";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -13,6 +14,13 @@ const Navbar = () => {
 
   const linkClass =
     "text-sm font-semibold transition-colors duration-200 hover:text-orange-400";
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  }
 
   return (
     <nav
@@ -68,20 +76,50 @@ const Navbar = () => {
             </a>
           </li>
           <li>
-            <NavLink
-              to="/login"
-              className={({ isActive }) =>
-                `${linkClass} px-4 py-1.5 rounded-lg border transition-all duration-200 ${
-                  isActive
-                    ? "bg-orange-400 border-orange-400 text-white"
-                    : scrolled
-                      ? "border-white/30 text-white/80 hover:border-orange-400"
-                      : "border-gray-400 text-gray-800 hover:border-orange-400"
-                }`
-              }
-            >
-              Login
-            </NavLink>
+            {
+              (() => {
+                const usuario = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('usuario') || 'null') : null;
+                if (usuario) {
+                  return (
+                    <div className="flex items-center gap-2">
+                      <NavLink
+                        to="/perfil"
+                        className={({ isActive }) =>
+                          `${linkClass} px-4 py-1.5 rounded-lg border transition-all duration-200 ${
+                            isActive
+                              ? "bg-orange-400 border-orange-400 text-white"
+                              : scrolled
+                                ? "border-white/30 text-white/80 hover:border-orange-400"
+                                : "border-gray-400 text-gray-800 hover:border-orange-400"
+                          }`
+                        }
+                      >
+                        Perfil
+                      </NavLink>
+
+                      <button onClick={handleLogout} className="text-sm text-gray-500 hover:text-gray-800">Salir</button>
+                    </div>
+                  )
+                }
+
+                return (
+                  <NavLink
+                    to="/login"
+                    className={({ isActive }) =>
+                      `${linkClass} px-4 py-1.5 rounded-lg border transition-all duration-200 ${
+                        isActive
+                          ? "bg-orange-400 border-orange-400 text-white"
+                          : scrolled
+                            ? "border-white/30 text-white/80 hover:border-orange-400"
+                            : "border-gray-400 text-gray-800 hover:border-orange-400"
+                      }`
+                    }
+                  >
+                    Login
+                  </NavLink>
+                )
+              })()
+            }
           </li>
         </ul>
       </div>

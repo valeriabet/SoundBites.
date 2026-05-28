@@ -20,3 +20,7 @@ export const registrarUsuario = async (nuevoUsuario) => {
         throw error;
     }
 };
+
+export const logout = () => {
+    localStorage.removeItem('usuario');
+};

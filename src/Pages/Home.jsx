@@ -35,10 +35,11 @@ const Home = () => {
                     </div>
                 </div>
             </section>
+            <SeccionPlatos />
 
             <CarruselReserva />
 
-            <SeccionPlatos />
+           
 
             <Footer />
         </>

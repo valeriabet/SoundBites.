@@ -30,7 +30,6 @@ public class AppDbContext : DbContext
             entity.Property(e => e.Precio).HasColumnName("precio");
             entity.Property(e => e.IdCategoria).HasColumnName("id_categoria");
             entity.Property(e => e.Imagen).HasColumnName("imagen");
-            entity.HasOne<Categoria>().WithMany(c => c.Platos).HasForeignKey(p => p.IdCategoria);
         });
     }
 }

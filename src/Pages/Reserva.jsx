@@ -1,17 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { MdMusicNote } from "react-icons/md";
+import { crearReserva } from "../Services/reservaService";
 
-const GENEROS = [
-  "Rock",
-  "Pop",
-  "Jazz",
-  "Salsa",
-  "Reggaetón",
-  "Clásica",
-  "Electrónica",
-  "Cumbia",
-];
+// Generos se obtendrán desde la API
 
 const HORAS = [
   "09:00",
@@ -38,31 +30,65 @@ const Reserva = () => {
   const [fecha, setFecha] = useState("");
   const [hora, setHora] = useState("");
   const [genero, setGenero] = useState("");
+  const [generos, setGeneros] = useState([]);
+  const [numeroPersonas, setNumeroPersonas] = useState(1);
   const [enviado, setEnviado] = useState(false);
   const [error, setError] = useState("");
 
   const hoy = new Date().toISOString().split("T")[0];
 
+  useEffect(() => {
+    const cargarGeneros = async () => {
+      try {
+        const res = await fetch("https://localhost:7117/api/genero/listargeneros");
+        const data = await res.json();
+        setGeneros(data);
+      } catch (error) {
+        console.error('Error al cargar géneros', error);
+      }
+    };
+
+    cargarGeneros();
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
-
     if (!nombre.trim() || !fecha || !hora || !genero) {
       setError("Completa todos los campos y elige un género musical.");
       return;
     }
 
+    // Usuario logueado requerido
+    const usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
+    if (!usuario || !usuario.idUsuario) {
+      setError('Debes iniciar sesión para reservar');
+      return;
+    }
+
+    // Combinar fecha + hora en ISO
+    const fechaHora = new Date(`${fecha}T${hora}`).toISOString();
+
+    // Encontrar idGenero a partir del select (genero guarda id)
+    const idGenero = Number(genero);
+
     const reserva = {
-      nombre: nombre.trim(),
-      fecha,
-      hora,
-      genero,
-      sede,
+      idUsuario: usuario.idUsuario,
+      fecha: fechaHora,
+      numeroPersonas: Number(numeroPersonas),
+      idGenero: idGenero,
     };
 
-    // Conexión con API pendiente
-    console.log("Reserva:", reserva);
-    setEnviado(true);
+    // Enviar al backend
+    (async () => {
+      try {
+        await crearReserva(reserva);
+        setEnviado(true);
+      } catch (error) {
+        console.error('Error al crear reserva', error);
+        setError('Error al crear la reserva');
+      }
+    })();
   };
 
   if (enviado) {
@@ -174,33 +200,33 @@ const Reserva = () => {
             </div>
           </div>
 
-          <fieldset>
-            <legend className="text-sm font-medium text-gray-700 mb-2">
-              Vota por un género musical <span className="text-red-800">*</span>
-            </legend>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {GENEROS.map((g) => (
-                <label
-                  key={g}
-                  className={`cursor-pointer text-center text-sm font-medium py-2.5 px-2 rounded-xl border-2 transition-all ${
-                    genero === g
-                      ? "border-red-900 bg-red-50 text-red-900"
-                      : "border-gray-200 bg-gray-50 text-gray-600 hover:border-orange-300"
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="genero"
-                    value={g}
-                    className="sr-only"
-                    checked={genero === g}
-                    onChange={() => setGenero(g)}
-                  />
-                  {g}
-                </label>
+          <div>
+            <label className="text-sm font-medium text-gray-700 block mb-1">Número de personas</label>
+            <select
+              value={numeroPersonas}
+              onChange={(e) => setNumeroPersonas(e.target.value)}
+              className="w-full border rounded-xl px-3 py-2.5 bg-gray-50 text-sm outline-none focus:ring-2 focus:ring-orange-300"
+            >
+              {Array.from({length:8}, (_,i)=>i+1).map(n=> (
+                <option key={n} value={n}>{n}</option>
               ))}
-            </div>
-          </fieldset>
+            </select>
+          </div>
+
+          <div>
+            <label className="text-sm font-medium text-gray-700 block mb-1">Género musical</label>
+            <select
+              value={genero}
+              onChange={(e)=>setGenero(e.target.value)}
+              className="w-full border rounded-xl px-3 py-2.5 bg-gray-50 text-sm outline-none focus:ring-2 focus:ring-orange-300"
+              required
+            >
+              <option value="">Selecciona género</option>
+              {generos.map(g => (
+                <option key={g.idGenero} value={g.idGenero}>{g.nombre}</option>
+              ))}
+            </select>
+          </div>
 
           {error && (
             <p className="text-sm text-red-700 bg-red-50 rounded-lg px-3 py-2">

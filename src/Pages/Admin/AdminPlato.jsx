@@ -79,7 +79,10 @@ const AdminPlato = () => {
                         <p>{plato.descripcion}</p>
 
                         <div className="flex gap-2 mt-4">
-                            <button className="bg-blue-500 text-white px-3 py-1 rounded">
+                            <button
+                                onClick={() => navigate(`/admin/editarplato/${plato.idPlato}`)}
+                                className="bg-blue-500 text-white px-3 py-1 rounded"
+                            >
                                 Editar
                             </button>
 
