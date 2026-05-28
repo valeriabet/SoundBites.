@@ -16,21 +16,13 @@ namespace SoundBitesAPI.Controllers
             _context = context;
         }
 
-        [HttpGet("listar platos")]
+        [HttpGet("listarplatos")]
         public async Task<ActionResult<IEnumerable<Plato>>> ListarPlatos()
         {
             var platos = await _context.Platos.ToListAsync();
             return Ok(platos); //200
         }
-
-        [HttpPost("guardar plato")]
-        public async Task<ActionResult<Plato>> GuardarPlato(Plato plato)
-        {
-            _context.Platos.Add(plato);
-            await _context.SaveChangesAsync();
-            return StatusCode(StatusCodes.Status201Created, plato);
-        }
-        [HttpPut("actualizar plato/{id}")]
+        [HttpPut("actualizarplato/{id}")]
         public async Task<ActionResult> ActualizarPlato(int id, Plato plato)
         {
             var platoActualizado = await _context.Platos.FindAsync(id);
@@ -74,6 +66,15 @@ namespace SoundBitesAPI.Controllers
             {
                 return NotFound();
             }
+            return Ok(plato);
+        }
+        [HttpPost("crearplato")]
+        public async Task<IActionResult> CrearPlato([FromBody] Plato plato)
+        {
+            _context.Platos.Add(plato);
+
+            await _context.SaveChangesAsync();
+
             return Ok(plato);
         }
     }

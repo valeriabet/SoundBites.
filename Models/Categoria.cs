@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace SoundBitesAPI.Models;
 
@@ -9,5 +10,6 @@ public partial class Categoria
 
     public string Nombre { get; set; } = null!;
 
+    [JsonIgnore]
     public ICollection<Plato> Platos { get; set; } = new List<Plato>();
 }

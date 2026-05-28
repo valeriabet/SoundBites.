@@ -16,14 +16,14 @@ namespace SoundBitesAPI.Controllers
             _context = context;
         }
 
-        [HttpGet("listar generos")]
+        [HttpGet("listargeneros")]
         public async Task<ActionResult<IEnumerable<Genero>>> ListarGeneros()
         {
             var generos = await _context.Generos.ToListAsync();
             return Ok(generos); //200
         }
 
-        [HttpPost("guardar genero")]
+        [HttpPost("guardargenero")]
         public async Task<ActionResult<Genero>> GuardarGenero(Genero genero)
         {
             _context.Generos.Add(genero);
@@ -31,7 +31,7 @@ namespace SoundBitesAPI.Controllers
             return StatusCode(StatusCodes.Status201Created, genero);
         }
 
-        [HttpPut("actualizar genero/{id}")]
+        [HttpPut("actualizargenero/{id}")]
         public async Task<ActionResult> ActualizarGenero(int id, Genero genero)
         {
             var generoActualizado = await _context.Generos.FindAsync(id);

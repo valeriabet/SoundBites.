@@ -16,21 +16,21 @@ namespace SoundBitesAPI.Controllers
             _context = context;
         }
 
-        [HttpGet("listar categorias")]
+        [HttpGet("listarcategorias")]
         public async Task<ActionResult<IEnumerable<Categoria>>> ListarCategorias()
         {
             var categorias = await _context.Categorias.ToListAsync();
             return Ok(categorias); //200
         }
 
-        [HttpPost("guardar categoria")]
+        [HttpPost("guardarcategoria")]
         public async Task<ActionResult<Categoria>> GuardarCategoria(Categoria categoria)
         {
             _context.Categorias.Add(categoria);
             await _context.SaveChangesAsync();
             return StatusCode(StatusCodes.Status201Created, categoria);
         }
-        [HttpPut("actualizar categoria/{id}")]
+        [HttpPut("actualizarcategoria/{id}")]
         public async Task<ActionResult> ActualizarCategoria(int id, Categoria categoria)
         {
             var categoriaActualizada = await _context.Categorias.FindAsync(id);

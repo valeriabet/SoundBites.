@@ -72,7 +72,7 @@ public partial class AppDbContext : DbContext
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("precio");
             entity.Property(e => e.Imagen)
-                .HasColumnName("Imagen");
+                .HasColumnName("imagen");
         });
 
         modelBuilder.Entity<Usuario>(entity =>

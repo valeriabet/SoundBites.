@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [correo, setCorreo] = useState("");
-  const [contraseña, setContraseña] = useState("");
-  const [verContraseña, setVerContraseña] = useState(false);
+  const [contrasena, setContrasena] = useState("");
+  const [verContrasena, setVerContrasena] = useState(false);
 
   const navigate = useNavigate();
 
@@ -15,19 +15,19 @@ function Login() {
     const response = await fetch("https://localhost:7117/api/usuario/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ correo, contraseña }),
+      body: JSON.stringify({ correo, contrasena }),
     });
 
     if (response.ok) {
       const usuario = await response.json();
       localStorage.setItem("usuario", JSON.stringify(usuario));
       if (usuario.rol === "admin") {
-        navigate("/admin");
+        navigate("/admin/platos");
       } else {
         navigate("/");
       }
     } else {
-      alert("Correo o contraseña incorrectos");
+      alert("Correo o contrasena incorrectos");
     }
   };
 
@@ -64,22 +64,22 @@ function Login() {
         {/* Contraseña */}
         <div className="mb-2">
           <label className="text-sm font-medium text-gray-700 block mb-1">
-            Contraseña
+            Contrasena
           </label>
           <div className="flex items-center border rounded-xl px-3 py-2 bg-gray-50">
             <input
-              type={verContraseña ? "text" : "password"}
+              type={verContrasena ? "text" : "password"}
               placeholder="········"
               className="bg-transparent outline-none w-full text-sm"
-              value={contraseña}
-              onChange={(e) => setContraseña(e.target.value)}
+              value={contrasena}
+              onChange={(e) => setContrasena(e.target.value)}
             />
             <button
               type="button"
-              onClick={() => setVerContraseña(!verContraseña)}
+              onClick={() => setVerContrasena(!verContrasena)}
               className="text-gray-400"
             >
-              {verContraseña ? (
+              {verContrasena ? (
                 <MdVisibilityOff size={18} />
               ) : (
                 <MdVisibility size={18} />

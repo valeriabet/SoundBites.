@@ -16,14 +16,14 @@ namespace SoundBitesAPI.Controllers
             _context = context;
         }
 
-        [HttpGet("listar favoritos")]
+        [HttpGet("listarfavoritos")]
         public async Task<ActionResult<IEnumerable<Favorito>>> ListarFavoritos()
         {
             var favoritos = await _context.Favoritos.ToListAsync();
             return Ok(favoritos); //200
         }
 
-        [HttpPost("Guardar favorito")]
+        [HttpPost("Guardarfavorito")]
         public async Task<ActionResult<Genero>> GuardarFavorito(Favorito favorito)
         {
             _context.Favoritos.Add(favorito);

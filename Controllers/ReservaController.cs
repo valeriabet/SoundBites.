@@ -16,14 +16,14 @@ namespace SoundBitesAPI.Controllers
             _context = context;
         }
 
-        [HttpGet("listar reservas")]
+        [HttpGet("listarreservas")]
         public async Task<ActionResult<IEnumerable<Reserva>>> ListarReservas()
         {
             var reservas = await _context.Reservas.ToListAsync();
             return Ok(reservas);
         }
 
-        [HttpPost("guardar reserva")]
+        [HttpPost("guardarreserva")]
         public async Task<ActionResult<Reserva>> GuardarReserva(Reserva reserva)
         {
             _context.Reservas.Add(reserva);
