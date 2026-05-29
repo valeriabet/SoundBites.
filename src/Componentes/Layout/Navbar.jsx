@@ -79,28 +79,50 @@ const Navbar = () => {
             {
               (() => {
                 const usuario = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('usuario') || 'null') : null;
-                if (usuario) {
-                  return (
-                    <div className="flex items-center gap-2">
-                      <NavLink
-                        to="/perfil"
-                        className={({ isActive }) =>
-                          `${linkClass} px-4 py-1.5 rounded-lg border transition-all duration-200 ${
-                            isActive
-                              ? "bg-orange-400 border-orange-400 text-white"
-                              : scrolled
-                                ? "border-white/30 text-white/80 hover:border-orange-400"
-                                : "border-gray-400 text-gray-800 hover:border-orange-400"
-                          }`
-                        }
-                      >
-                        Perfil
-                      </NavLink>
+                              if (usuario) {
+                                  return (
+                                      <div className="flex items-center gap-3">
 
-                      <button onClick={handleLogout} className="text-sm text-gray-500 hover:text-gray-800">Salir</button>
-                    </div>
-                  )
-                }
+                                          <NavLink
+                                              to="/favoritos"
+                                              className={({ isActive }) =>
+                                                  `${linkClass} ${isActive
+                                                      ? "text-orange-400"
+                                                      : scrolled
+                                                          ? "text-white/80"
+                                                          : "text-gray-800"
+                                                  }`
+                                              }
+                                          >
+                                              Favoritos
+                                          </NavLink>
+
+                                          <NavLink
+                                              to="/perfil"
+                                              className={({ isActive }) =>
+                                                  `${linkClass} px-4 py-1.5 rounded-lg border transition-all duration-200 ${isActive
+                                                      ? "bg-orange-400 border-orange-400 text-white"
+                                                      : scrolled
+                                                          ? "border-white/30 text-white/80 hover:border-orange-400"
+                                                          : "border-gray-400 text-gray-800 hover:border-orange-400"
+                                                  }`
+                                              }
+                                          >
+                                              Perfil
+                                          </NavLink>
+
+                                          <button
+                                              onClick={handleLogout}
+                                              className={`text-sm transition ${scrolled
+                                                      ? "text-white/70 hover:text-white"
+                                                      : "text-gray-600 hover:text-black"
+                                                  }`}
+                                          >
+                                              Salir
+                                          </button>
+                                      </div>
+                                  );
+                              }
 
                 return (
                   <NavLink

@@ -2,8 +2,8 @@ import { useState, useEffect, useRef } from "react";
 
 import {
     guardarFavorito,
-    eliminarFavoritoUsuarioPlato,
-    obtenerFavoritosUsuario,
+    eliminarFavorito,
+    listarFavoritos,
 } from "../Services/favoritoService";
 
 const FontLoader = () => (
@@ -32,7 +32,7 @@ const fmt = (n) =>
     }).format(n);
 
 // ─────────────────────────────
-// Tarjeta Plato
+// TARJETA PLATO
 // ─────────────────────────────
 
 const TarjetaPlato = ({
@@ -54,11 +54,9 @@ const TarjetaPlato = ({
             onMouseLeave={() => setHover(false)}
             className={[
                 "bg-white rounded-2xl overflow-hidden flex flex-col cursor-default transition-all duration-500",
-
                 visible
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-6",
-
                 hover
                     ? "shadow-[0_12px_36px_rgba(0,0,0,0.13)] -translate-y-1"
                     : "shadow-[0_2px_12px_rgba(0,0,0,0.07)]",
@@ -78,20 +76,19 @@ const TarjetaPlato = ({
                     alt={plato.nombre}
                     className={[
                         "w-full h-full object-cover block transition-transform duration-500",
-
                         hover
                             ? "scale-[1.06]"
                             : "scale-100",
                     ].join(" ")}
                 />
 
-                {/* FAVORITO */}
+                {/* BOTON FAVORITO */}
 
                 <button
                     onClick={() =>
                         toggleFavorito(plato.idPlato)
                     }
-                    className="absolute top-3 right-3 text-2xl z-10"
+                    className="absolute top-3 right-3 text-2xl"
                 >
                     {esFavorito ? "❤️" : "🤍"}
                 </button>
@@ -101,7 +98,8 @@ const TarjetaPlato = ({
                 <div
                     className="absolute bottom-3 left-3 px-3 py-1 rounded-full text-white text-xs font-bold tracking-wide"
                     style={{
-                        fontFamily: "'Nunito', sans-serif",
+                        fontFamily:
+                            "'Nunito', sans-serif",
                         backgroundColor: "#F97316",
                     }}
                 >
@@ -114,7 +112,8 @@ const TarjetaPlato = ({
             <div
                 className="px-5 pt-4 pb-5 flex flex-col gap-2 flex-1"
                 style={{
-                    fontFamily: "'Nunito', sans-serif",
+                    fontFamily:
+                        "'Nunito', sans-serif",
                 }}
             >
                 <h3 className="text-[1rem] font-bold text-gray-800 leading-snug">
@@ -161,7 +160,7 @@ const SeccionPlatos = () => {
     );
 
     // ─────────────────────────────
-    // CARGAR PLATOS Y CATEGORÍAS
+    // CARGAR PLATOS Y CATEGORIAS
     // ─────────────────────────────
 
     useEffect(() => {
@@ -193,7 +192,7 @@ const SeccionPlatos = () => {
 
                 if (!resCat.ok) {
                     throw new Error(
-                        `Categorías: ${resCat.status}`
+                        `Categorias: ${resCat.status}`
                     );
                 }
 
@@ -209,10 +208,7 @@ const SeccionPlatos = () => {
 
             } catch (e) {
 
-                console.error(
-                    "Error cargando datos:",
-                    e
-                );
+                console.error(e);
 
                 setError(
                     "No se pudo conectar con el servidor."
@@ -236,16 +232,24 @@ const SeccionPlatos = () => {
 
         const cargarFavoritos = async () => {
 
-            if (!usuario) return;
-
             try {
 
                 const data =
-                    await obtenerFavoritosUsuario(
-                        usuario.idUsuario
-                    );
+                    await listarFavoritos();
 
-                setFavoritos(data);
+                if (usuario) {
+
+                    const favoritosUsuario =
+                        data.filter(
+                            (f) =>
+                                f.idUsuario ===
+                                usuario.idUsuario
+                        );
+
+                    setFavoritos(
+                        favoritosUsuario
+                    );
+                }
 
             } catch (error) {
 
@@ -261,32 +265,37 @@ const SeccionPlatos = () => {
     // TOGGLE FAVORITO
     // ─────────────────────────────
 
-    const toggleFavorito = async (idPlato) => {
+    const toggleFavorito = async (
+        idPlato
+    ) => {
 
         if (!usuario) {
 
-            alert("Debes iniciar sesión");
+            alert(
+                "Debes iniciar sesión"
+            );
 
             return;
         }
 
         const existe = favoritos.find(
-            (f) => f.idPlato === idPlato
+            (f) =>
+                f.idPlato === idPlato
         );
 
         try {
 
             if (existe) {
 
-                await eliminarFavoritoUsuarioPlato(
-                    usuario.idUsuario,
-                    idPlato
+                await eliminarFavorito(
+                    existe.idFavorito
                 );
 
                 setFavoritos(
                     favoritos.filter(
                         (f) =>
-                            f.idPlato !== idPlato
+                            f.idFavorito !==
+                            existe.idFavorito
                     )
                 );
 
@@ -296,7 +305,6 @@ const SeccionPlatos = () => {
                     await guardarFavorito({
                         idUsuario:
                             usuario.idUsuario,
-
                         idPlato,
                     });
 
@@ -333,23 +341,33 @@ const SeccionPlatos = () => {
 
         setVisibles([]);
 
-        if (platosFiltrados.length === 0)
-            return;
+        if (
+            platosFiltrados.length === 0
+        ) return;
 
-        const timers = platosFiltrados.map(
-            (_, i) =>
-                setTimeout(() => {
-                    setVisibles((prev) => [
-                        ...prev,
-                        i,
-                    ]);
-                }, i * 75)
-        );
+        const timers =
+            platosFiltrados.map(
+                (_, i) =>
+                    setTimeout(() => {
+                        setVisibles(
+                            (prev) => [
+                                ...prev,
+                                i,
+                            ]
+                        );
+                    }, i * 75)
+            );
 
-        return () =>
-            timers.forEach(clearTimeout);
+        return () => {
+            timers.forEach(
+                clearTimeout
+            );
+        };
 
-    }, [categoriaActiva, cargando]);
+    }, [
+        categoriaActiva,
+        cargando,
+    ]);
 
     // ─────────────────────────────
     // RENDER
@@ -362,14 +380,15 @@ const SeccionPlatos = () => {
             <section
                 className="min-h-screen pt-24 pb-20 px-6"
                 style={{
-                    backgroundColor: "#FDDCB5",
+                    backgroundColor:
+                        "#FDDCB5",
                     fontFamily:
                         "'Nunito', sans-serif",
                 }}
             >
                 <div className="max-w-5xl mx-auto">
 
-                    {/* HEADER */}
+                    {/* TITULO */}
 
                     <div className="mb-8">
 
@@ -411,10 +430,9 @@ const SeccionPlatos = () => {
 
                     <div className="bg-white rounded-3xl p-6 shadow-[0_4px_32px_rgba(0,0,0,0.08)]">
 
-                        {/* CATEGORÍAS */}
+                        {/* CATEGORIAS */}
 
                         {categorias.length > 0 && (
-
                             <div className="flex gap-2 flex-wrap mb-6">
 
                                 {[
@@ -422,7 +440,6 @@ const SeccionPlatos = () => {
                                         idCategoria: 0,
                                         nombre: "Todos",
                                     },
-
                                     ...categorias,
                                 ].map((cat) => {
 
@@ -446,7 +463,9 @@ const SeccionPlatos = () => {
                                                 activa
                                                     ? "text-white shadow-sm"
                                                     : "bg-orange-50 text-orange-400 hover:bg-orange-100",
-                                            ].join(" ")}
+                                            ].join(
+                                                " "
+                                            )}
                                             style={{
                                                 backgroundColor:
                                                     activa
@@ -461,17 +480,17 @@ const SeccionPlatos = () => {
                             </div>
                         )}
 
-                        {/* LOADING */}
+                        {/* CONTENIDO */}
 
                         {cargando ? (
 
                             <div className="flex justify-center py-20">
-                                <div className="spinner w-10 h-10 rounded-full border-4 border-orange-100 border-t-orange-400" />
+                                Cargando platos...
                             </div>
 
                         ) : error ? (
 
-                            <div className="text-center py-20 text-red-400">
+                            <div className="text-center py-20 text-red-500">
                                 {error}
                             </div>
 
@@ -486,16 +505,26 @@ const SeccionPlatos = () => {
                                 }}
                             >
                                 {platosFiltrados.map(
-                                    (plato, i) => (
-
+                                    (
+                                        plato,
+                                        i
+                                    ) => (
                                         <TarjetaPlato
                                             key={
                                                 plato.idPlato
                                             }
-                                            plato={plato}
-                                            visible={visibles.includes(i)}
-                                            favoritos={favoritos}
-                                            toggleFavorito={toggleFavorito}
+                                            plato={
+                                                plato
+                                            }
+                                            visible={visibles.includes(
+                                                i
+                                            )}
+                                            favoritos={
+                                                favoritos
+                                            }
+                                            toggleFavorito={
+                                                toggleFavorito
+                                            }
                                         />
                                     )
                                 )}
