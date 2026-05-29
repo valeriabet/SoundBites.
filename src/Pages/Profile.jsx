@@ -14,10 +14,13 @@ const Profile = () => {
     if (!u) {
       navigate("/login");
       return;
-    }
-    setUsuario(u);
 
-    (async () => {
+      }
+      
+
+      (async () => {
+          setUsuario(u);
+
       try {
         const all = await listarReservas();
         const mine = all.filter(r => Number(r.idUsuario) === Number(u.idUsuario || u.IdUsuario));
